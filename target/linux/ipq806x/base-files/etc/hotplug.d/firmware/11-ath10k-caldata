@@ -16,6 +16,19 @@ xor() {
 	printf "%0${retlen}x" "$ret"
 }
 
+find_mmc_part() {
+	local DEVNAME PARTNAME
+
+	if grep -q "$1" /proc/mtd; then
+		echo "" && return 0
+	fi
+
+	for DEVNAME in /sys/block/mmcblk0/mmcblk*p*; do
+		PARTNAME=$(grep PARTNAME ${DEVNAME}/uevent | cut -f2 -d'=')
+		[ "$PARTNAME" = "$1" ] && echo "/dev/$(basename $DEVNAME)" && return 0
+	done
+}
+
 ath10kcal_die() {
 	echo "ath10cal: " "$*"
 	exit 1
@@ -37,6 +50,8 @@ ath10kcal_extract() {
 	local mtd
 
 	mtd=$(find_mtd_chardev $part)
+	[ -n "$mtd" ] || \
+	mtd=$(find_mmc_part $part)
 	[ -n "$mtd" ] || \
 		ath10kcal_die "no mtd device found for partition $part"
 
@@ -113,6 +128,10 @@ case "$FIRMWARE" in
 		ath10kcal_extract "art" 4096 12064
 		ath10kcal_patch_mac_crc $(macaddr_add $(mtd_get_mac_binary art 6) +1)
 		;;
+	norton,core-517)
+		ath10kcal_extract "0:ART" 4096 12064
+		ath10kcal_patch_mac_crc $(macaddr_add $(mtd_get_mac_ascii 0:APPSBLENV ethaddr) +2)
+		;;
 	tplink,c2600)
 		ath10kcal_extract "radio" 4096 12064
 		ath10kcal_patch_mac_crc $(macaddr_add $(mtd_get_mac_binary default-mac 8) -1)
@@ -146,6 +165,10 @@ case "$FIRMWARE" in
 	netgear,r7800)
 		ath10kcal_extract "art" 20480 12064
 		ath10kcal_patch_mac_crc $(macaddr_add $(mtd_get_mac_binary art 6) +2)
+		;;
+	norton,core-517)
+		ath10kcal_extract "0:ART" 20480 12064
+		ath10kcal_patch_mac_crc $(macaddr_add $(mtd_get_mac_ascii 0:APPSBLENV ethaddr) +3)
 		;;
 	tplink,c2600)
 		ath10kcal_extract "radio" 20480 12064

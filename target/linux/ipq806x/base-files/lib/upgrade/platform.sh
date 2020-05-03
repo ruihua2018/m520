@@ -20,6 +20,7 @@ platform_do_upgrade() {
 	netgear,r7500 |\
 	netgear,r7500v2 |\
 	netgear,r7800 |\
+	norton,core-517 |\
 	qcom,ipq8064-ap148 |\
 	qcom,ipq8064-ap161 |\
 	ruijie,rg-mtfi-m520 |\
@@ -48,6 +49,9 @@ platform_do_upgrade() {
 
 platform_nand_pre_upgrade() {
 	case "$(board_name)" in
+	norton,core-517)
+		norton_do_upgrade "$1"
+		;;
 	ruijie,rg-mtfi-m520)
 		ruijie_do_upgrade "$1"
 		;;
