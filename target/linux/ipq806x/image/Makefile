@@ -79,6 +79,20 @@ define Device/ZyXELImage
 	IMAGE/sysupgrade.bin/squashfs := append-rootfs | pad-to $$$${BLOCKSIZE} | sysupgrade-tar rootfs=$$$$@ | append-metadata
 endef
 
+define Device/askey_rt4230w
+	$(call Device/FitImage)
+	$(call Device/UbiFit)
+	DEVICE_VENDOR := Askey
+	DEVICE_MODEL := rt4230w
+	DEVICE_DTS := qcom-ipq8065-rt4230w
+	BLOCKSIZE := 128k
+	PAGESIZE := 2048
+	IMAGES += nand-factory.bin
+	IMAGE/nand-factory.bin := append-ubi | qsdk-ipq-factory-nand
+	DEVICE_PACKAGES := ath10k-firmware-qca9984-ct
+endef
+TARGET_DEVICES += askey_rt4230w
+
 define Device/buffalo_wxr-2533dhp
 	$(call Device/LegacyImage)
 	DEVICE_VENDOR := Buffalo

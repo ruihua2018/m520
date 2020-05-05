@@ -12,6 +12,13 @@ board_config_update
 board=$(board_name)
 
 case "$board" in
+askey,rt4230w)
+	hw_mac_addr=$(mtd_get_mac_binary 0:ART 0)
+	ucidef_add_switch "switch0" \
+		"2:lan" "3:lan" "4:lan" "5:lan" "6@eth1" "1:wan" "0@eth0"
+	ucidef_set_interface_macaddr "wan" "$hw_mac_addr"
+	ucidef_set_interface_macaddr "lan" "$(macaddr_add $hw_mac_addr 1)"
+	;;
 buffalo,wxr-2533dhp |\
 compex,wpq864 |\
 netgear,d7800 |\

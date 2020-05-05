@@ -110,6 +110,10 @@ case "$FIRMWARE" in
 	;;
 "ath10k/pre-cal-pci-0000:01:00.0.bin")
 	case $board in
+	askey,rt4230w)
+		ath10kcal_extract "0:ART" 4096 12064
+		ath10kcal_patch_mac_crc $(macaddr_add $(mtd_get_mac_binary 0:ART 0) -1)
+		;;
 	buffalo,wxr-2533dhp)
 		ath10kcal_extract "ART" 4096 12064
 		ath10kcal_patch_mac_crc $(mtd_get_mac_binary ART 30)
@@ -148,6 +152,10 @@ case "$FIRMWARE" in
 	;;
 "ath10k/pre-cal-pci-0001:01:00.0.bin")
 	case $board in
+	askey,rt4230w)
+		ath10kcal_extract "0:ART" 20480 12064
+		ath10kcal_patch_mac_crc $(macaddr_add $(mtd_get_mac_binary 0:ART 0) -2)
+		;;
 	buffalo,wxr-2533dhp)
 		ath10kcal_extract "ART" 20480 12064
 		ath10kcal_patch_mac_crc $(mtd_get_mac_binary ART 24)

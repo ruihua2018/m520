@@ -15,6 +15,7 @@ platform_do_upgrade() {
 		CI_ROOTPART="ubi_rootfs"
 		nand_do_upgrade "$ARGV"
 		;;
+	askey,rt4230w|\
 	compex,wpq864|\
 	netgear,d7800 |\
 	netgear,r7500 |\
